@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produto;
 use Illuminate\Http\Request;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class ProdutoController extends Controller
 {
@@ -21,8 +22,7 @@ class ProdutoController extends Controller
             return view('produtos.index', compact('produtos'));
 
         } catch (\Exception $e) {
-            // Alert::error('Erro', 'Ocorreu um erro');
-            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
     }
@@ -34,15 +34,7 @@ class ProdutoController extends Controller
      */
     public function create()
     {
-        try {
-
-            return view('produtos.create');
-
-        } catch (\Exception $e) {
-            // Alert::error('Erro', 'Ocorreu um erro');
-            dd($e);
-            return redirect()->back();
-        }
+        return view('produtos.create');
     }
 
     /**
@@ -54,16 +46,16 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         try {
-            $produto = new Produto;
+            $produto = new Produto();
             $produto->nome = $request->nome;
             $produto->ativo = true;
             $produto->save();
 
+            Alert::success('Tudo Certo', 'Produto cadastrado com sucesso');
             return redirect()->route('produtos.index');
 
         } catch (\Exception $e) {
-            // Alert::error('Erro', 'Ocorreu um erro');
-            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
     }
@@ -90,12 +82,11 @@ class ProdutoController extends Controller
         try {
 
             $produto = Produto::findOrFail($id);
-            
+
             return view('produtos.edit', compact('produto'));
         } catch (\Exception $e) {
-             // Alert::error('Erro', 'Ocorreu um erro');
-             dd($e);
-             return redirect()->back();
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
         }
     }
 
@@ -113,10 +104,10 @@ class ProdutoController extends Controller
             $produto->nome = $request->nome;
             $produto->save();
 
+            Alert::success('Tudo Certo', 'Produto atualizado com sucesso');
             return redirect()->route('produtos.index');
         } catch (\Exception $e) {
-            // Alert::error('Erro', 'Ocorreu um erro');
-            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
     }
@@ -134,10 +125,10 @@ class ProdutoController extends Controller
             $produto->ativo = false;
             $produto->save();
 
+            Alert::success('Tudo Certo', 'Produto excluído com sucesso');
             return redirect()->route('produtos.index');
         } catch (\Exception $e) {
-            // Alert::error('Erro', 'Ocorreu um erro');
-            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
 
