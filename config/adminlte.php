@@ -321,7 +321,7 @@ return [
         ['header' => 'MENU'],
         [
             'text' => 'Listas',
-            'url'  => 'admin/settings',
+            'url'  => 'listas/index',
             'icon' => 'fas fa-fw fa-user',
         ],
         [

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ListaController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,5 +32,17 @@ Route::prefix('produtos')->group(function () {
     Route::post('/update/{id}', [ProdutoController::class, 'update'])->name('produtos.update');
     Route::get('/destroy/{id}', [ProdutoController::class, 'destroy'])->name('produtos.destroy');
     Route::get('/edit/{id}', [ProdutoController::class, 'edit'])->name('produtos.edit');
+
+});
+
+
+//listas
+Route::prefix('listas')->group(function () {
+    Route::get('/index', [ListaController::class, 'index'])->name('listas.index');
+    Route::get('/create', [ListaController::class, 'create'])->name('listas.create');
+    Route::post('/store', [ListaController::class, 'store'])->name('listas.store');
+    Route::post('/update/{id}', [ListaController::class, 'update'])->name('listas.update');
+    Route::get('/destroy/{id}', [ListaController::class, 'destroy'])->name('listas.destroy');
+    Route::get('/edit/{id}', [ListaController::class, 'edit'])->name('listas.edit');
 
 });
