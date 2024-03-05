@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemLista;
 use App\Models\Lista;
+use App\Models\Produto;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -80,6 +82,45 @@ class ListaController extends Controller
             return redirect()->back();
         }
 
+    }
+
+    public function itensIndex($id_lista) {
+
+        try {
+            $lista = Lista::findOrFail($id_lista);
+            $itens = ItemLista::where('id_lista', $id_lista)->where('ativo', true)->get();
+
+            return view('listas.itens.index', compact('itens', 'lista'));
+        } catch (\Exception $e) {
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+    }
+
+    public function itensCreate($id_lista)  {
+
+        $lista = Lista::findOrFail($id_lista);
+        $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+
+        return view('listas.itens.create', compact('lista','produtos'));
+    }
+
+    public function itensStore(Request $request, $id_lista) {
+        try {
+            $item = new ItemLista();
+            $item->id_produto = $request->id_produto;
+            $item->quantidade = $request->quantidade;
+            $item->id_lista = $id_lista;
+            $item->ativo = true;
+            $item->save();
+
+            Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
+            return redirect()->route('listas.itens.index', $id_lista);
+        } catch (\Exception $e) {
+            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
     }
 
 }

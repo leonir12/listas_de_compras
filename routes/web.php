@@ -41,8 +41,13 @@ Route::prefix('listas')->group(function () {
     Route::get('/index', [ListaController::class, 'index'])->name('listas.index');
     Route::get('/create', [ListaController::class, 'create'])->name('listas.create');
     Route::post('/store', [ListaController::class, 'store'])->name('listas.store');
-    Route::post('/update/{id}', [ListaController::class, 'update'])->name('listas.update');
-    Route::get('/destroy/{id}', [ListaController::class, 'destroy'])->name('listas.destroy');
-    Route::get('/edit/{id}', [ListaController::class, 'edit'])->name('listas.edit');
+    Route::post('/update/{id_lista}', [ListaController::class, 'update'])->name('listas.update');
+    Route::get('/destroy/{id_lista}', [ListaController::class, 'destroy'])->name('listas.destroy');
+    Route::get('/edit/{id_lista}', [ListaController::class, 'edit'])->name('listas.edit');
 
+    Route::prefix('itens')->group(function() {
+        Route::get('/{id_lista}', [ListaController::class, 'itensIndex'])->name('listas.itens.index');
+        Route::get('/create/{id_lista}', [ListaController::class, 'itensCreate'])->name('listas.itens.create');
+        Route::post('/store/{id_lista}', [ListaController::class, 'itensStore'])->name('listas.itens.store');
+    });
 });
