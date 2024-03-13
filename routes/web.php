@@ -49,5 +49,7 @@ Route::prefix('listas')->group(function () {
         Route::get('/{id_lista}', [ListaController::class, 'itensIndex'])->name('listas.itens.index');
         Route::get('/create/{id_lista}', [ListaController::class, 'itensCreate'])->name('listas.itens.create');
         Route::post('/store/{id_lista}', [ListaController::class, 'itensStore'])->name('listas.itens.store');
+        Route::get('/edit/{id_lista}/{id_item}', [ListaController::class, 'itensEdit'])->name('listas.itens.edit');
+        Route::post('/update/{id_lista}/{id_item}', [ListaController::class, 'itensUpdate'])->name('listas.itens.update');
     });
 });

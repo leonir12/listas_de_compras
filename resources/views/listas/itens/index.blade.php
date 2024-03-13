@@ -30,16 +30,16 @@
                         <tr>
                             <td> {{ $item->produto->nome }} </td>
                             <td> {{ $item->quantidade }} </td>
-                            {{-- <td>
+                            <td>
 
-                                <a href="{{ route('itens.edit', $item->id) }}"><button type="button"
+                                <a href="{{ route('listas.itens.edit', ['id_lista' => $item->id_lista, 'id_item' => $item->id]) }}"><button type="button"
                                         class="btn btn-warning">
                                         Editar
                                     </button></a>
 
-                                <button class="btn btn-danger" data-toggle="modal"
-                                    data-target="#modalDeletar{{ $item->id }}">Deletar</button>
-                            </td> --}}
+                                {{-- <button class="btn btn-danger" data-toggle="modal"
+                                    data-target="#modalDeletar{{ $item->id }}">Deletar</button> --}}
+                            </td>
                             {{-- <div class="modal fade" id="modalDeletar{{ $item->id }}" tabindex="-1"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">

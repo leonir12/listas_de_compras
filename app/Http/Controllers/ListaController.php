@@ -117,7 +117,36 @@ class ListaController extends Controller
             Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
             return redirect()->route('listas.itens.index', $id_lista);
         } catch (\Exception $e) {
-            dd($e);
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+    }
+
+    function itensEdit($id_lista, $id_item) {
+        try {
+            $lista = Lista::findOrFail($id_lista);
+            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+            $item = ItemLista::findOrFail($id_item);
+
+            return view('listas.itens.edit', compact('lista', 'item','produtos'));
+        } catch (\Exception $e) {
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+    }
+
+    function itensUpdate(Request $request, $id_lista, $id_item) {
+        try {
+            $item = ItemLista::findOrFail($id_item);
+            $item->id_produto = $request->id_produto;
+            $item->quantidade = $request->quantidade;
+            $item->id_lista = $id_lista;
+            $item->ativo = true;
+            $item->save();
+
+            Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
+            return redirect()->route('listas.itens.index', $id_lista);
+        } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
