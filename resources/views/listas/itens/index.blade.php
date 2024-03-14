@@ -37,10 +37,10 @@
                                         Editar
                                     </button></a>
 
-                                {{-- <button class="btn btn-danger" data-toggle="modal"
-                                    data-target="#modalDeletar{{ $item->id }}">Deletar</button> --}}
+                                <button class="btn btn-danger" data-toggle="modal"
+                                    data-target="#modalDeletar{{ $item->id }}">Deletar</button>
                             </td>
-                            {{-- <div class="modal fade" id="modalDeletar{{ $item->id }}" tabindex="-1"
+                            <div class="modal fade" id="modalDeletar{{ $item->id }}" tabindex="-1"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -51,18 +51,18 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-                                            Deseja deletar a item: {{ $item->nome }}?
+                                            Deseja deletar o item: {{ $item->produto->nome }}?
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Cancelar</button>
-                                            <a href="{{ route('itens.destroy', $item->id) }}">
+                                            <a href="{{ route('listas.itens.destroy', ['id_lista' => $lista->id, 'id_item' => $item->id]) }}">
                                                 <button type="button" class="btn btn-danger">Deletar</button>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                            </div> --}}
+                            </div>
                         </tr>
                     @endforeach
 

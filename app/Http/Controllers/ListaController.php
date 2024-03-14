@@ -144,12 +144,27 @@ class ListaController extends Controller
             $item->ativo = true;
             $item->save();
 
-            Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
+            Alert::success('Tudo Certo', 'Item alterado com sucesso');
             return redirect()->route('listas.itens.index', $id_lista);
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
         }
+    }
+
+    public function itensDestroy($id_lista, $id_item) {
+        try {
+            $item = ItemLista::findOrFail($id_item);
+            $item->ativo = false;
+            $item->save();
+
+            Alert::success('Tudo Certo', 'Item excluído com sucesso');
+            return redirect()->route('listas.itens.index', $id_lista);
+        } catch (\Exception $e) {
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+
     }
 
 }

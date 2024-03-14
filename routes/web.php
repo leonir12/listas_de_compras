@@ -51,5 +51,6 @@ Route::prefix('listas')->group(function () {
         Route::post('/store/{id_lista}', [ListaController::class, 'itensStore'])->name('listas.itens.store');
         Route::get('/edit/{id_lista}/{id_item}', [ListaController::class, 'itensEdit'])->name('listas.itens.edit');
         Route::post('/update/{id_lista}/{id_item}', [ListaController::class, 'itensUpdate'])->name('listas.itens.update');
+        Route::get('/destroy/{id_lista}/{id_item}', [ListaController::class, 'itensDestroy'])->name('listas.itens.destroy');
     });
 });
