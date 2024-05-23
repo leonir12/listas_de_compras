@@ -41,6 +41,8 @@ Route::prefix('listas')->group(function () {
     Route::get('/index', [ListaController::class, 'index'])->name('listas.index');
     Route::get('/create', [ListaController::class, 'create'])->name('listas.create');
     Route::post('/store', [ListaController::class, 'store'])->name('listas.store');
+    Route::get('/filtroConsulta', [ListaController::class, 'filtroConsulta'])->name('listas.filtroConsulta');
+    Route::get('/consultar', [ListaController::class, 'consultar'])->name('listas.consultar');
     Route::post('/update/{id_lista}', [ListaController::class, 'update'])->name('listas.update');
     Route::get('/destroy/{id_lista}', [ListaController::class, 'destroy'])->name('listas.destroy');
     Route::get('/edit/{id_lista}', [ListaController::class, 'edit'])->name('listas.edit');

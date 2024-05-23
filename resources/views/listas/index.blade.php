@@ -11,6 +11,10 @@
         <button class="btn btn-success">Nova lista</button>
     </a>
 
+    <a href="{{ route('listas.filtroConsulta') }}">
+        <button class="btn btn-success">Consultar quantidade de produto</button>
+    </a>
+
     <div class="card">
 
         <div class="card-body">

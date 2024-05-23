@@ -84,6 +84,34 @@ class ListaController extends Controller
 
     }
 
+    function filtroConsulta() {
+        try {
+            $listas = Lista::where('ativo', true)->orderBy('titulo', 'asc')->get();
+            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+
+            return view('listas.filtroConsulta', compact('listas', 'produtos'));
+        } catch (\Exception $e) {
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+
+    }
+
+    function consultar(Request $request, ItemLista $quantidade) {
+
+        try {
+
+            $data = $request->except('_token');
+            $quantidade = $quantidade->qtdItens($data);
+            dd($quantidade);
+
+        } catch (\Exception $e) {
+            Alert::error('Erro', 'Ocorreu um erro');
+            return redirect()->back();
+        }
+
+    }
+
     public function itensIndex($id_lista) {
 
         try {
@@ -141,7 +169,6 @@ class ListaController extends Controller
             $item->id_produto = $request->id_produto;
             $item->quantidade = $request->quantidade;
             $item->id_lista = $id_lista;
-            $item->ativo = true;
             $item->save();
 
             Alert::success('Tudo Certo', 'Item alterado com sucesso');
