@@ -13,7 +13,7 @@ class ListaController extends Controller
     public function index() {
 
         try {
-            $listas = Lista::where('ativo', true)->orderBy('titulo', 'asc')->get();
+            $listas = Lista::where('ativo', true)->get();
 
             return view('listas.index', compact('listas'));
         } catch (\Exception $e) {
@@ -86,7 +86,7 @@ class ListaController extends Controller
 
     function filtroConsulta() {
         try {
-            $listas = Lista::where('ativo', true)->orderBy('titulo', 'asc')->get();
+            $listas = Lista::where('ativo', true)->get();
             $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
 
             return view('listas.filtroConsulta', compact('listas', 'produtos'));
@@ -97,13 +97,15 @@ class ListaController extends Controller
 
     }
 
-    function consultar(Request $request, ItemLista $quantidade) {
+    function consultar(Request $request, ItemLista $itemLista) {
 
         try {
 
             $data = $request->except('_token');
-            $quantidade = $quantidade->qtdItens($data);
-            dd($quantidade);
+            $item = Produto::where('id', $request->id_produto)->first();
+            $quantidade = $itemLista->qtdItens($data);
+
+            return view('listas.itemConsultado', compact('item', 'quantidade'));
 
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
