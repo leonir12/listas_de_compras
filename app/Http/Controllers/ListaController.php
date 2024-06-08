@@ -118,7 +118,13 @@ class ListaController extends Controller
 
         try {
             $lista = Lista::findOrFail($id_lista);
-            $itens = ItemLista::where('id_lista', $id_lista)->where('ativo', true)->get();
+            $itens = ItemLista::join('produtos', 'produtos.id', '=', 'item_listas.id_produto')
+                ->join('listas', 'listas.id', '=', 'item_listas.id_lista')
+                ->where('id_lista', $id_lista)
+                ->where('item_listas.ativo', true)
+                ->select('item_listas.*')
+                ->orderBy('produtos.nome', 'asc')
+                ->get();
 
             return view('listas.itens.index', compact('itens', 'lista'));
         } catch (\Exception $e) {
