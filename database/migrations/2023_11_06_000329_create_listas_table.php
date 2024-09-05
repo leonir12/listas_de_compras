@@ -16,7 +16,7 @@ class CreateListasTable extends Migration
         Schema::create('listas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('titulo')->nullable();
-            $table->boolean('ativo')->nullable();
+            $table->boolean('ativo')->default(true)->nullable();
             $table->timestamps();
         });
     }

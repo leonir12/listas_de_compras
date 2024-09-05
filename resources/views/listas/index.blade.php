@@ -23,7 +23,6 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
                         <th scope="col">Título</th>
                         <th scope="col">Ações</th>
                     </tr>
@@ -32,7 +31,6 @@
 
                     @foreach ($listas as $lista)
                         <tr>
-                            <td> {{ $lista->id }} </td>
                             <td> {{ $lista->titulo }} </td>
                             <td>
 

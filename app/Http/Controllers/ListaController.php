@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreListaRequest;
 use App\Models\ItemLista;
 use App\Models\Lista;
 use App\Models\Produto;
+use App\Services\ListaService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -13,7 +15,10 @@ class ListaController extends Controller
     public function index() {
 
         try {
-            $listas = Lista::where('ativo', true)->get();
+            //O link de paginação ficou bugado
+            $listas = ListaService::getListas();
+            // $dataForm = $request->except('_token');
+
 
             return view('listas.index', compact('listas'));
         } catch (\Exception $e) {
@@ -26,13 +31,9 @@ class ListaController extends Controller
         return view('listas.create');
     }
 
-    public function store(Request $request) {
+    public function store(StoreListaRequest $request) {
         try {
-            $lista = new Lista();
-            $lista->titulo = $request->titulo;
-            $lista->ativo = true;
-            $lista->save();
-
+            Lista::create($request->validated());
             Alert::success('Tudo Certo', 'Lista cadastrada com sucesso');
             return redirect()->route('listas.index');
         } catch (\Exception $e) {
@@ -43,7 +44,7 @@ class ListaController extends Controller
 
     public function edit($id) {
         try {
-            $lista = Lista::findOrFail($id);
+            $lista = ListaService::findListaAtiva($id);
 
             return view('listas.edit', compact('lista'));
         } catch (\Exception $e) {
@@ -54,9 +55,11 @@ class ListaController extends Controller
 
 
     public function update(Request $request, $id) {
+        //Criar classe de validação
 
         try {
-            $lista = Lista::findOrFail($id);
+            //Existe update($request->validated())?
+            $lista = Lista::findListaAtiva($id);
             $lista->titulo = $request->titulo;
             $lista->save();
 
@@ -86,6 +89,7 @@ class ListaController extends Controller
 
     function filtroConsulta() {
         try {
+            //Criar service para produto selecionando produtos ativos ordenados por nome
             $listas = Lista::where('ativo', true)->get();
             $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
 
@@ -100,7 +104,9 @@ class ListaController extends Controller
     function consultar(Request $request, ItemLista $itemLista) {
 
         try {
-
+            //trocar where por findOrFail
+            //trocar o nome do método qtdItens() para somarQtdItens()
+            //Aplicar form request para a consulta
             $data = $request->except('_token');
             $item = Produto::where('id', $request->id_produto)->first();
             $quantidade = $itemLista->qtdItens($data);
@@ -115,6 +121,8 @@ class ListaController extends Controller
     }
 
     public function itensIndex($id_lista) {
+        //Jogar join do ItemLista para o Service
+        //Criar método booleano isAtivo() para todas as models
 
         try {
             $lista = Lista::findOrFail($id_lista);
@@ -141,6 +149,7 @@ class ListaController extends Controller
         return view('listas.itens.create', compact('lista','produtos'));
     }
 
+    //Criar controller para ItemLista
     public function itensStore(Request $request, $id_lista) {
         try {
             $item = new ItemLista();
