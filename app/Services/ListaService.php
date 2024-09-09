@@ -7,6 +7,7 @@ use Exception;
 
 class ListaService {
 
+const INATIVO = 0;
 const ATIVO = 1;
 
 //Vou ter que criar um método paginate para index e outro get para aparecer no select?

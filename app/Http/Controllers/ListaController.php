@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreListaRequest;
+use App\Http\Requests\UpdateListaRequest;
 use App\Models\ItemLista;
 use App\Models\Lista;
 use App\Models\Produto;
@@ -17,7 +18,6 @@ class ListaController extends Controller
         try {
             $listas = ListaService::getListasPaginate();
             $dataForm = $request->except('_token');
-
 
             return view('listas.index', compact('listas', 'dataForm'));
         } catch (\Exception $e) {
@@ -34,6 +34,7 @@ class ListaController extends Controller
         try {
             Lista::create($request->validated());
             Alert::success('Tudo Certo', 'Lista cadastrada com sucesso');
+
             return redirect()->route('listas.index');
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -53,16 +54,13 @@ class ListaController extends Controller
     }
 
 
-    public function update(Request $request, $id) {
-        //Criar classe de validação
+    public function update(UpdateListaRequest $request, $id) {
 
         try {
-            //Existe update($request->validated())?
-            $lista = Lista::findListaAtiva($id);
-            $lista->titulo = $request->titulo;
-            $lista->save();
-
+            $lista = ListaService::findListaAtiva($id);
+            $lista->update($request->validated());
             Alert::success('Tudo Certo', 'Lista atualizada com sucesso');
+
             return redirect()->route('listas.index');
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -73,8 +71,8 @@ class ListaController extends Controller
 
     public function destroy($id) {
         try {
-            $lista = Lista::findOrFail($id);
-            $lista->ativo = false;
+            $lista = ListaService::findListaAtiva($id);
+            $lista->ativo = ListaService::INATIVO;
             $lista->save();
 
             Alert::success('Tudo Certo', 'Lista excluída com sucesso');
