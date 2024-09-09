@@ -12,15 +12,14 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class ListaController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
 
         try {
-            //O link de paginação ficou bugado
-            $listas = ListaService::getListas();
-            // $dataForm = $request->except('_token');
+            $listas = ListaService::getListasPaginate();
+            $dataForm = $request->except('_token');
 
 
-            return view('listas.index', compact('listas'));
+            return view('listas.index', compact('listas', 'dataForm'));
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();

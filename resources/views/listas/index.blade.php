@@ -76,7 +76,7 @@
                 </tbody>
             </table>
 
-            {{-- {{ $listas->appends($dataForm)->links() }} --}}
+            {{ $listas->appends($dataForm)->links() }}
 
         </div>
 
