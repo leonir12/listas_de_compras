@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProdutoRequest;
+use App\Http\Requests\UpdateProdutoRequest;
 use App\Models\Produto;
+use App\Services\ProdutoService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -13,13 +16,14 @@ class ProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
 
-            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+            $produtos = ProdutoService::getProdutosPaginate();
+            $dataForm = $request->except('_token');
 
-            return view('produtos.index', compact('produtos'));
+            return view('produtos.index', compact('produtos', 'dataForm'));
 
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -43,15 +47,12 @@ class ProdutoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProdutoRequest $request)
     {
         try {
-            $produto = new Produto();
-            $produto->nome = $request->nome;
-            $produto->ativo = true;
-            $produto->save();
-
+            Produto::create($request->validated());
             Alert::success('Tudo Certo', 'Produto cadastrado com sucesso');
+
             return redirect()->route('produtos.index');
 
         } catch (\Exception $e) {
@@ -81,7 +82,7 @@ class ProdutoController extends Controller
     {
         try {
 
-            $produto = Produto::findOrFail($id);
+            $produto = ProdutoService::findProdutoAtivo($id);
 
             return view('produtos.edit', compact('produto'));
         } catch (\Exception $e) {
@@ -97,14 +98,13 @@ class ProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProdutoRequest $request, $id)
     {
         try {
-            $produto = Produto::findOrFail($id);
-            $produto->nome = $request->nome;
-            $produto->save();
-
+            $produto = ProdutoService::findProdutoAtivo($id);
+            $produto->update($request->validated());
             Alert::success('Tudo Certo', 'Produto atualizado com sucesso');
+
             return redirect()->route('produtos.index');
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -121,8 +121,8 @@ class ProdutoController extends Controller
     public function destroy($id)
     {
         try {
-            $produto = Produto::findOrFail($id);
-            $produto->ativo = false;
+            $produto = ProdutoService::findProdutoAtivo($id);
+            $produto->ativo = ProdutoService::INATIVO;
             $produto->save();
 
             Alert::success('Tudo Certo', 'Produto excluído com sucesso');

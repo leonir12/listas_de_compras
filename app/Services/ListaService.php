@@ -12,11 +12,11 @@ const ATIVO = 1;
 
 //Vou ter que criar um método paginate para index e outro get para aparecer no select?
 static function getListasPaginate() {
-    return $listas = Lista::where('ativo', self::ATIVO)->orderBy('titulo', 'asc')->paginate(15);
+    return $listas = Lista::where('ativo', self::ATIVO)->paginate(15);
 }
 
 static function getTodasListas() {
-    return $listas = Lista::where('ativo', self::ATIVO)->orderBy('titulo', 'asc')->get();
+    return $listas = Lista::where('ativo', self::ATIVO)->get();
 }
 
 static function findListaAtiva($id) {

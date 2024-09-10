@@ -67,7 +67,7 @@
                 </tbody>
             </table>
 
-            {{-- {{ $produtos->appends($dataForm)->links() }} --}}
+            {{ $produtos->appends($dataForm)->links() }}
 
         </div>
 
