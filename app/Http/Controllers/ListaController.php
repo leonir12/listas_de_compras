@@ -8,6 +8,7 @@ use App\Models\ItemLista;
 use App\Models\Lista;
 use App\Models\Produto;
 use App\Services\ListaService;
+use App\Services\ProdutoService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -86,9 +87,8 @@ class ListaController extends Controller
 
     function filtroConsulta() {
         try {
-            //Criar service para produto selecionando produtos ativos ordenados por nome
-            $listas = Lista::where('ativo', true)->get();
-            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+            $listas = ListaService::getTodasListas();
+            $produtos = ProdutoService::getTodosProdutos();
 
             return view('listas.filtroConsulta', compact('listas', 'produtos'));
         } catch (\Exception $e) {
@@ -102,11 +102,10 @@ class ListaController extends Controller
 
         try {
             //trocar where por findOrFail
-            //trocar o nome do método qtdItens() para somarQtdItens()
             //Aplicar form request para a consulta
             $data = $request->except('_token');
             $item = Produto::where('id', $request->id_produto)->first();
-            $quantidade = $itemLista->qtdItens($data);
+            $quantidade = $itemLista->somarQtdItens($data);
 
             return view('listas.itemConsultado', compact('item', 'quantidade'));
 
@@ -116,96 +115,4 @@ class ListaController extends Controller
         }
 
     }
-
-    public function itensIndex($id_lista) {
-        //Jogar join do ItemLista para o Service
-        //Criar método booleano isAtivo() para todas as models
-
-        try {
-            $lista = Lista::findOrFail($id_lista);
-            $itens = ItemLista::join('produtos', 'produtos.id', '=', 'item_listas.id_produto')
-                ->join('listas', 'listas.id', '=', 'item_listas.id_lista')
-                ->where('id_lista', $id_lista)
-                ->where('item_listas.ativo', true)
-                ->select('item_listas.*')
-                ->orderBy('produtos.nome', 'asc')
-                ->get();
-
-            return view('listas.itens.index', compact('itens', 'lista'));
-        } catch (\Exception $e) {
-            Alert::error('Erro', 'Ocorreu um erro');
-            return redirect()->back();
-        }
-    }
-
-    public function itensCreate($id_lista)  {
-
-        $lista = Lista::findOrFail($id_lista);
-        $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
-
-        return view('listas.itens.create', compact('lista','produtos'));
-    }
-
-    //Criar controller para ItemLista
-    public function itensStore(Request $request, $id_lista) {
-        try {
-            $item = new ItemLista();
-            $item->id_produto = $request->id_produto;
-            $item->quantidade = $request->quantidade;
-            $item->id_lista = $id_lista;
-            $item->ativo = true;
-            $item->save();
-
-            Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
-            return redirect()->route('listas.itens.index', $id_lista);
-        } catch (\Exception $e) {
-            Alert::error('Erro', 'Ocorreu um erro');
-            return redirect()->back();
-        }
-    }
-
-    function itensEdit($id_lista, $id_item) {
-        try {
-            $lista = Lista::findOrFail($id_lista);
-            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
-            $item = ItemLista::findOrFail($id_item);
-
-            return view('listas.itens.edit', compact('lista', 'item','produtos'));
-        } catch (\Exception $e) {
-            Alert::error('Erro', 'Ocorreu um erro');
-            return redirect()->back();
-        }
-    }
-
-    function itensUpdate(Request $request, $id_lista, $id_item) {
-        try {
-            $item = ItemLista::findOrFail($id_item);
-            $item->id_produto = $request->id_produto;
-            $item->quantidade = $request->quantidade;
-            $item->id_lista = $id_lista;
-            $item->save();
-
-            Alert::success('Tudo Certo', 'Item alterado com sucesso');
-            return redirect()->route('listas.itens.index', $id_lista);
-        } catch (\Exception $e) {
-            Alert::error('Erro', 'Ocorreu um erro');
-            return redirect()->back();
-        }
-    }
-
-    public function itensDestroy($id_lista, $id_item) {
-        try {
-            $item = ItemLista::findOrFail($id_item);
-            $item->ativo = false;
-            $item->save();
-
-            Alert::success('Tudo Certo', 'Item excluído com sucesso');
-            return redirect()->route('listas.itens.index', $id_lista);
-        } catch (\Exception $e) {
-            Alert::error('Erro', 'Ocorreu um erro');
-            return redirect()->back();
-        }
-
-    }
-
 }

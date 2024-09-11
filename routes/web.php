@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ItemListaController;
 use App\Http\Controllers\ListaController;
 use App\Http\Controllers\ProdutoController;
 use Illuminate\Support\Facades\Route;
@@ -48,11 +49,11 @@ Route::prefix('listas')->group(function () {
     Route::get('/edit/{id_lista}', [ListaController::class, 'edit'])->name('listas.edit');
 
     Route::prefix('itens')->group(function() {
-        Route::get('/{id_lista}', [ListaController::class, 'itensIndex'])->name('listas.itens.index');
-        Route::get('/create/{id_lista}', [ListaController::class, 'itensCreate'])->name('listas.itens.create');
-        Route::post('/store/{id_lista}', [ListaController::class, 'itensStore'])->name('listas.itens.store');
-        Route::get('/edit/{id_lista}/{id_item}', [ListaController::class, 'itensEdit'])->name('listas.itens.edit');
-        Route::post('/update/{id_lista}/{id_item}', [ListaController::class, 'itensUpdate'])->name('listas.itens.update');
-        Route::get('/destroy/{id_lista}/{id_item}', [ListaController::class, 'itensDestroy'])->name('listas.itens.destroy');
+        Route::get('/{id_lista}', [ItemListaController::class, 'index'])->name('listas.itens.index');
+        Route::get('/create/{id_lista}', [ItemListaController::class, 'create'])->name('listas.itens.create');
+        Route::post('/store/{id_lista}', [ItemListaController::class, 'store'])->name('listas.itens.store');
+        Route::get('/edit/{id_lista}/{id_item}', [ItemListaController::class, 'edit'])->name('listas.itens.edit');
+        Route::post('/update/{id_lista}/{id_item}', [ItemListaController::class, 'update'])->name('listas.itens.update');
+        Route::get('/destroy/{id_lista}/{id_item}', [ItemListaController::class, 'destroy'])->name('listas.itens.destroy');
     });
 });
