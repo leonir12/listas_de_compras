@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Services\ProdutoService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProdutoRequest extends FormRequest
 {
@@ -24,7 +26,11 @@ class StoreProdutoRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome' => 'required|max:255|unique:produtos'
+            'nome' => [
+                'required',
+                Rule::unique('produtos')->whereNot('ativo', ProdutoService::INATIVO),
+                'max:255'
+            ],
         ];
     }
 }
