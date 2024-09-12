@@ -23,7 +23,7 @@ class ItemListaController extends Controller
     {
         //Criar método booleano isAtivo() para todas as models
         try {
-            $lista = Lista::findOrFail($id_lista);
+            $lista = ListaService::findListaAtiva($id_lista);
             $itens = ItemListaService::getItens($id_lista);
             $dataForm = $request->except('_token');
 
