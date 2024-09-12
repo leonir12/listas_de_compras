@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreItemListaRequest;
+use App\Http\Requests\UpdateItemListaRequest;
 use App\Models\ItemLista;
 use App\Models\Lista;
-use App\Models\Produto;
+use App\Services\ItemListaService;
+use App\Services\ListaService;
+use App\Services\ProdutoService;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,21 +19,15 @@ class ItemListaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($id_lista)
+    public function index(Request $request, $id_lista)
     {
-        //Jogar join do ItemLista para o Service
         //Criar método booleano isAtivo() para todas as models
         try {
             $lista = Lista::findOrFail($id_lista);
-            $itens = ItemLista::join('produtos', 'produtos.id', '=', 'item_listas.id_produto')
-                ->join('listas', 'listas.id', '=', 'item_listas.id_lista')
-                ->where('id_lista', $id_lista)
-                ->where('item_listas.ativo', true)
-                ->select('item_listas.*')
-                ->orderBy('produtos.nome', 'asc')
-                ->get();
+            $itens = ItemListaService::getItens($id_lista);
+            $dataForm = $request->except('_token');
 
-            return view('listas.itens.index', compact('itens', 'lista'));
+            return view('listas.itens.index', compact('itens', 'lista', 'dataForm'));
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
             return redirect()->back();
@@ -43,8 +41,8 @@ class ItemListaController extends Controller
      */
     public function create($id_lista)
     {
-        $lista = Lista::findOrFail($id_lista);
-        $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
+        $lista = ListaService::findListaAtiva($id_lista);
+        $produtos = ProdutoService::getTodosProdutos();
 
         return view('listas.itens.create', compact('lista','produtos'));
     }
@@ -55,17 +53,12 @@ class ItemListaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id_lista)
+    public function store(StoreItemListaRequest $request, $id_lista)
     {
         try {
-            $item = new ItemLista();
-            $item->id_produto = $request->id_produto;
-            $item->quantidade = $request->quantidade;
-            $item->id_lista = $id_lista;
-            $item->ativo = true;
-            $item->save();
-
+            ItemLista::create($request->validated() + ['id_lista' => $id_lista]);
             Alert::success('Tudo Certo', 'Item cadastrado com sucesso');
+
             return redirect()->route('listas.itens.index', $id_lista);
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -93,9 +86,9 @@ class ItemListaController extends Controller
     public function edit($id_lista, $id_item)
     {
         try {
-            $lista = Lista::findOrFail($id_lista);
-            $produtos = Produto::where('ativo', true)->orderBy('nome', 'asc')->get();
-            $item = ItemLista::findOrFail($id_item);
+            $lista = ListaService::findListaAtiva($id_lista);
+            $produtos = ProdutoService::getTodosProdutos();
+            $item = ItemListaService::findItemAtivo($id_item);
 
             return view('listas.itens.edit', compact('lista', 'item','produtos'));
         } catch (\Exception $e) {
@@ -111,16 +104,13 @@ class ItemListaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id_lista, $id_item)
+    public function update(UpdateItemListaRequest $request, $id_lista, $id_item)
     {
         try {
-            $item = ItemLista::findOrFail($id_item);
-            $item->id_produto = $request->id_produto;
-            $item->quantidade = $request->quantidade;
-            $item->id_lista = $id_lista;
-            $item->save();
-
+            $item = ItemListaService::findItemAtivo($id_item);
+            $item->update($request->validated());
             Alert::success('Tudo Certo', 'Item alterado com sucesso');
+
             return redirect()->route('listas.itens.index', $id_lista);
         } catch (\Exception $e) {
             Alert::error('Erro', 'Ocorreu um erro');
@@ -137,8 +127,8 @@ class ItemListaController extends Controller
     public function destroy($id_lista, $id_item)
     {
         try {
-            $item = ItemLista::findOrFail($id_item);
-            $item->ativo = false;
+            $item = ItemListaService::findItemAtivo($id_item);
+            $item->ativo = ItemListaService::INATIVO;
             $item->save();
 
             Alert::success('Tudo Certo', 'Item excluído com sucesso');

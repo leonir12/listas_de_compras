@@ -69,7 +69,7 @@
                 </tbody>
             </table>
 
-            {{-- {{ $itens->appends($dataForm)->links() }} --}}
+            {{ $itens->appends($dataForm)->links() }}
 
         </div>
 
