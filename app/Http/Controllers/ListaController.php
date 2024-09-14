@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ConsultaRequest;
 use App\Http\Requests\StoreListaRequest;
 use App\Http\Requests\UpdateListaRequest;
 use App\Models\ItemLista;
@@ -98,13 +99,11 @@ class ListaController extends Controller
 
     }
 
-    function consultar(Request $request, ItemLista $itemLista) {
+    function consultar(ConsultaRequest $request, ItemLista $itemLista) {
 
         try {
-            //trocar where por findOrFail
-            //Aplicar form request para a consulta
             $data = $request->except('_token');
-            $item = Produto::where('id', $request->id_produto)->first();
+            $item = ProdutoService::findProdutoAtivo($request->id_produto);
             $quantidade = $itemLista->somarQtdItens($data);
 
             return view('listas.itemConsultado', compact('item', 'quantidade'));
