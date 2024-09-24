@@ -7,9 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <title>IDR-Paraná</title>
+    <title>Listas de Compras</title>
 
-    <link rel="shortcut icon" type="imagex/png" href="{{ asset('imagens/logo-idr-digital-aba.ico') }}">
+    <link rel="shortcut icon" type="imagex/png" href="{{ asset('imagens/logo-listas-de-compras-aba.ico') }}">
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
