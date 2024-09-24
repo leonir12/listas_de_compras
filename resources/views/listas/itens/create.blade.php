@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layout.main')
 
 @section('title', 'Dashboard')
 
@@ -17,7 +17,7 @@
 
                 <div class="form-group col-md-6">
                     <label for="inputPassword4">Produto</label>
-                    <select name="id_produto" class="form-control @error('id_produto') is-invalid @enderror" required
+                    <select name="id_produto" class="form-control select2 @error('id_produto') is-invalid @enderror" required
                         id="">
                         <option selected disabled> Selecione </option>
                         @foreach ($produtos as $produto)

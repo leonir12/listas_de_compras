@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layout.main')
 
 @section('title', 'Dashboard')
 
@@ -20,7 +20,7 @@
         <div class="card-body">
 
 
-            <table class="table table-striped">
+            <table id="datatables-reponsive" class="table table-bordered" style="width: 100%;">
                 <thead>
                     <tr>
                         <th scope="col">Título</th>

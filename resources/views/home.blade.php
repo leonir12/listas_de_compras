@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layout.main')
 
 @section('title', 'Dashboard')
 
@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-    <p>Welcome to this beautiful admin panel.</p>
+    <p>Utilize os itens do menu a esquerda para navegar no sistema.</p>
 @stop
 
 @section('css')

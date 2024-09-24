@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+@extends('layout.main')
 
 @section('title', 'Dashboard')
 
@@ -18,7 +18,7 @@
                     <div class="col-md-4">
                         <div class="mb-3">
                             <label for="inputStatus">Lista início</label>
-                            <select class="form-control @error('id_lista_inicio') is-invalid @enderror"
+                            <select class="form-control select2 @error('id_lista_inicio') is-invalid @enderror"
                                 name="id_lista_inicio">
                                 <option selected disabled> Selecione </option>
                                 @foreach ($listas as $lista)
@@ -35,7 +35,7 @@
 
                     <div class="col-md-4">
                         <label for="inputStatus">Lista final</label>
-                        <select class="form-control @error('id_lista_final') is-invalid @enderror" name="id_lista_final">
+                        <select class="form-control select2 @error('id_lista_final') is-invalid @enderror" name="id_lista_final">
                             <option selected disabled> Selecione </option>
                             @foreach ($listas as $lista)
                                 <option value={{ $lista->id }} {{ $lista->id == old('id_lista_final') ? 'selected' : '' }}> {{ $lista->titulo }}</option>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="inputStatus">Produto</label>
-                        <select class="form-control @error('id_produto') is-invalid @enderror" name="id_produto">
+                        <select class="form-control select2 @error('id_produto') is-invalid @enderror" name="id_produto">
                             <option selected disabled> Selecione </option>
                             @foreach ($produtos as $produto)
                                 <option value={{ $produto->id }} {{ $produto->id == old('id_produto') ? 'selected' : '' }}> {{ $produto->nome }}</option>
